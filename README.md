@@ -1,4 +1,5 @@
 # CMCE30005--group7-
+<<<<<<< HEAD
 # CMCE30005 Business Analytics Challenge
 ## [Group7] - [Airbnb]
 
@@ -36,3 +37,9 @@ what question you are answering, why it matters, and what methods you plan to us
 
 *Last updated: [Date]*
 
+=======
+Problem statement
+
+Air bnb
+Business Problem 
+>>>>>>> 28829d2c7af39da62eff5a2762d15e7c5ab03c6c
