@@ -21,7 +21,7 @@
 #   "rmarkdown"     # R Markdown rendering
 # ))
 
-# Load packages
+# Load packagess
 library(tidyverse)
 library(lubridate)
 library(janitor)
