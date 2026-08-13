@@ -5,7 +5,7 @@
 
 **Subject:** CMCE30005 Business Analytics Challenge, Semester 2 2026
 **University:** University of Melbourne
-**Team Members:** [Han Ton], [Ruby Wang], [Dina Lian], [Qi Zhang]
+**Team Members:** [Han Ton], [Ruby WANG], [Dina Lian], [Qi Zhang]
 
 ---
 
