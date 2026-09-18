@@ -45,16 +45,16 @@ Business Problem
 
 test-dina lian
 
-### IMPORTING DATASETS ----------------------------------------------------------------------------------------------------
+# IMPORTING DATASETS ----------------------------------------------------------------------------------------------------
 calendar <- read.csv("calendar_airbnb.csv")
 listings <- read.csv("listings_airbnb.csv")
 reviews <- read.csv("reviews_airbnb.csv")
 
-### DATA PRE-PROCESSING AND CLEANING -------------------------------------------------------------------------------------
-# keep columns that are not full of NA values 
+# DATA PRE-PROCESSING AND CLEANING -------------------------------------------------------------------------------------
+## keep columns that are not full of NA values 
 listings_clean <- listings[, colSums(is.na(listings)) < nrow(listings)]  
 
-# changing type of date from chr to ymd date format 
+## changing type of date from chr to ymd date format 
 listings_clean <- listings_new |> 
   mutate(across(c(price_quote_checkin_date, 
                   price_quote_checkout_date, 
@@ -62,7 +62,7 @@ listings_clean <- listings_new |>
                   first_review, 
                   last_review), ymd)) 
 
-#checking if the ids and prices all match 
+## checking if the ids and prices all match 
 
 listings_clean %>% group_by(id) %>% summarise(n_url = n_distinct(listing_url), n_scrape = n_distinct(scrape_id)) %>% filter(n_url != 1 | n_scrape != 1) 
 listings_clean %>% group_by(host_id) %>% summarise(n_url = n_distinct(host_url)) %>% filter(n_url != 1) 
@@ -78,17 +78,17 @@ listings_clean <- listings_clean |>
                   calendar_last_scraped, 
                   first_review, 
                   last_review), ymd)) |>
-  # amenities is not empty
+## amenities is not empty
   filter(amenities != "[]")
 
 
-#listings without an empty price entity, could be seen as inactive listings 
+## listings without an empty price entity, could be seen as inactive listings 
 empty_price <- listings_clean %>% 
   filter(is.na(price) & is.na(price_quote_price_per_night) & is.na(price_quote_total_price)) 
 
 View(empty_price) 
 
-#long min stay:  
+## long min stay:  
 
 long_minimum_stay <- listings_clean %>% 
   filter(minimum_nights > 360) 
@@ -98,7 +98,7 @@ View(long_minimum_stay)
 
 #hotel free listings: 
 
-# Listings that mention "hotel" in room description 
+## Listings that mention "hotel" in room description 
 
 hotel_listings <- listings_clean %>% 
   filter( 
@@ -113,14 +113,14 @@ hotel_listings <- listings_clean %>%
       ) 
   ) 
 
-# Listings that do NOT mention "hotel" 
+## Listings that do NOT mention "hotel" 
 
 hotel_free_listings <- listings_clean %>% 
   filter(!id %in% hotel_listings$id) 
 
 
 
-#final listings, hotel free, no inactive listings, rid of unnessasary entities 
+## final listings, hotel free, no inactive listings, rid of unnessasary entities 
 
 final_listings <- listings_clean %>% 
   filter( 
@@ -141,7 +141,7 @@ cat("Hotels removed:", nrow(hotel_listings), "\n")
 cat("Long minimum stays removed:", nrow(long_minimum_stay), "\n") 
 cat("Final listings:", nrow(final_listings), "\n") 
 
-#remove empty rows, no empty rows 
+## remove empty rows, no empty rows 
 
 empty_rows <- final_listings %>% 
   filter(if_all(everything(), is.na)) 
@@ -149,7 +149,7 @@ empty_rows <- final_listings %>%
 View(empty_rows) 
 
 
-#remove the rows with 0 availabilities 
+## remove the rows with 0 availabilities 
 
 class(location_data$price) 
 
@@ -166,14 +166,14 @@ final_listings <- final_listings %>%
   ) 
 
 
-### QUESTION 1 ------------------------------------------------------------------------------------------------------------
+# QUESTION 1 ------------------------------------------------------------------------------------------------------------
 
 
-### QUESTION 2 ------------------------------------------------------------------------------------------------------------
+# QUESTION 2 ------------------------------------------------------------------------------------------------------------
 
 
-### QUESTION 3 ------------------------------------------------------------------------------------------------------------
-# classifying function for amenities
+# QUESTION 3 ------------------------------------------------------------------------------------------------------------
+## classifying function for amenities
 normalize_amenity <- function(x) {
   x <- tolower(x)
   x <- str_squish(x)
@@ -386,7 +386,7 @@ normalize_amenity <- function(x) {
 }
 
 
-# identified items not matched by the classifying function
+## identified items not matched by the classifying function
 unmatched <- final_listings %>%
   select(id, amenities) %>%
   mutate(
@@ -406,10 +406,10 @@ unmatched <- final_listings %>%
 
 unmatched
 
-# export the unmatched amenities into a csv for ease of reading and sorting
+## export the unmatched amenities into a csv for ease of reading and sorting
 write_csv(unmatched, "unmatched.csv")
-#########################################
 
+## amenities long
 amenities_long <- final_listings %>%
   select(id, amenities) %>%
   mutate(
@@ -432,8 +432,7 @@ amenities_long <- final_listings %>%
     amenity_clean = str_to_lower(str_squish(amenities))
   )
 
-###
-
+## binary processing for all amenities based on id
 amenity_binary <- amenities_long %>%
   mutate(
     amenity = normalize_amenity(amenity_clean)
@@ -446,8 +445,8 @@ amenity_binary <- amenities_long %>%
     values_from = present,
     values_fill = 0
   )
-####
 
+## df for streaming services on TV offered
 streaming_df <- amenities_long %>%
   group_by(id) %>%
   summarise(
@@ -483,9 +482,7 @@ streaming_df <- amenities_long %>%
     .groups = "drop"
   )
 
-
-
-
+## df for parking services offered
 parking_df <- amenities_long %>%
   group_by(id) %>%
   summarise(
@@ -520,6 +517,7 @@ parking_df <- amenities_long %>%
     .groups = "drop"
   )
 
+## counting individual group and total amenities
 amenity_counts <- amenities_long %>%
   group_by(id) %>%
   summarise(
@@ -678,6 +676,10 @@ amenity_counts <- amenities_long %>%
     .groups = "drop"
   )
 
+### checking characteristic and distribution of amenities count
+skim(amenity_counts)
+
+## creating amenities df
 amenities_df <- amenity_binary %>%
   left_join(streaming_df, by = "id") %>%
   left_join(parking_df, by = "id") %>%
@@ -691,11 +693,8 @@ amenities_df <- amenity_binary %>%
 
 write_csv(amenities_df, "amenities.csv")
 
-skim(amenity_counts)
-summary(amenity_counts$total_amenities)
 
-
-
+## creating data frame for logistic regression
 lreg_df <- listings_clean %>%
   select(id, availability_365) %>%
   left_join(amenity_counts, by = "id") %>%
@@ -707,6 +706,7 @@ lreg_df <- listings_clean %>%
     )
   )
 
+## logistic regression attempt
 q3_reg <- glm(
   occupancy_rate ~ . - id,
   data = lreg_df,
@@ -716,31 +716,31 @@ q3_reg <- glm(
 summary(q3_reg)
 
 
-### QUESTION 4 ------------------------------------------------------------------------------------------------------------
+# QUESTION 4 ------------------------------------------------------------------------------------------------------------
 
-# Q4 - Data Preparation 
+## Q4 - Data Preparation 
 
 library(tidyverse)
 
-# 1. Load data
+## 1. Load data
 listings <- read_csv("listings_airbnb.csv", guess_max = 30000)
 
-# 2. Confirm no duplicate IDs
+## 2. Confirm no duplicate IDs
 sum(duplicated(listings$id))
 
-# 3. Check missing data for key variables
+## 3. Check missing data for key variables
 listings %>%
   select(price, bedrooms, bathrooms, review_scores_rating) %>%
   summarise(across(everything(), ~ mean(is.na(.)) * 100))
 
-# 4. Clean and log-transform price
+## 4. Clean and log-transform price
 listings <- listings %>%
   mutate(
     price_num = parse_number(price),
     log_price = log(price_num)
   )
 
-# 5.  Median imputation grouped by property_type
+## 5.  Median imputation grouped by property_type
 listings <- listings %>%
   group_by(property_type) %>%
   mutate(
