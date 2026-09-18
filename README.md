@@ -45,12 +45,12 @@ Business Problem
 
 test-dina lian
 
-# IMPORTING DATASETS ----------------------------------------------------------------------------------------------------
+# IMPORTING DATASETS 
 calendar <- read.csv("calendar_airbnb.csv")
 listings <- read.csv("listings_airbnb.csv")
 reviews <- read.csv("reviews_airbnb.csv")
 
-# DATA PRE-PROCESSING AND CLEANING -------------------------------------------------------------------------------------
+# DATA PRE-PROCESSING AND CLEANING 
 ## keep columns that are not full of NA values 
 listings_clean <- listings[, colSums(is.na(listings)) < nrow(listings)]  
 
@@ -166,13 +166,13 @@ final_listings <- final_listings %>%
   ) 
 
 
-# QUESTION 1 ------------------------------------------------------------------------------------------------------------
+# QUESTION 1 
 
 
-# QUESTION 2 ------------------------------------------------------------------------------------------------------------
+# QUESTION 2 
 
 
-# QUESTION 3 ------------------------------------------------------------------------------------------------------------
+# QUESTION 3 
 ## classifying function for amenities
 normalize_amenity <- function(x) {
   x <- tolower(x)
@@ -716,7 +716,7 @@ q3_reg <- glm(
 summary(q3_reg)
 
 
-# QUESTION 4 ------------------------------------------------------------------------------------------------------------
+# QUESTION 4 
 
 ## Q4 - Data Preparation 
 
