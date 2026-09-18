@@ -45,6 +45,16 @@ Business Problem
 
 test-dina lian
 
+# IMPORTING LIBRARIES
+library(tidyverse)
+library(stargazer)
+library(lubridate)
+library(jsonlite)
+library(stringr)
+library(dplyr)
+library(readr)
+library(skimr)
+
 # IMPORTING DATASETS 
 calendar <- read.csv("calendar_airbnb.csv")
 listings <- read.csv("listings_airbnb.csv")
