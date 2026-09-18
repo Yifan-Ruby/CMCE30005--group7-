@@ -696,15 +696,14 @@ write_csv(amenities_df, "amenities.csv")
 
 ## creating data frame for logistic regression
 lreg_df <- listings_clean %>%
-  select(id, availability_365) %>%
+  select(id, estimated_occupancy_l365d) %>%
   left_join(amenity_counts, by = "id") %>%
   mutate(
     occupancy_rate = factor(
-      ifelse((1-availability_365)/365>=0.75, 1, 0),
+      ifelse((estimated_occupancy_l365d)/365>=0.75, 1, 0),
       levels = c(1, 0),
       labels = c("high occupancy", "low occupancy")
     )
-  )
 
 ## logistic regression attempt
 q3_reg <- glm(
