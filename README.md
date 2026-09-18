@@ -44,4 +44,41 @@ Air bnb
 Business Problem 
 
 test-dina lian
+
+
+# Q4 - Data Preparation 
+
+library(tidyverse)
+
+# 1. Load data
+listings <- read_csv("listings_airbnb.csv", guess_max = 30000)
+
+# 2. Confirm no duplicate IDs
+sum(duplicated(listings$id))
+
+# 3. Check missing data for key variables
+listings %>%
+  select(price, bedrooms, bathrooms, review_scores_rating) %>%
+  summarise(across(everything(), ~ mean(is.na(.)) * 100))
+
+# 4. Clean and log-transform price
+listings <- listings %>%
+  mutate(
+    price_num = parse_number(price),
+    log_price = log(price_num)
+  )
+
+# 5.  Median imputation grouped by property_type
+listings <- listings %>%
+  group_by(property_type) %>%
+  mutate(
+    bedrooms = ifelse(is.na(bedrooms), median(bedrooms, na.rm = TRUE), bedrooms),
+    bathrooms = ifelse(is.na(bathrooms), median(bathrooms, na.rm = TRUE), bathrooms),
+    review_scores_rating = ifelse(is.na(review_scores_rating),
+                                   median(review_scores_rating, na.rm = TRUE),
+                                   review_scores_rating)
+  ) %>%
+  ungroup()
+
+
 >>>>>>> 28829d2c7af39da62eff5a2762d15e7c5ab03c6c
