@@ -80,5 +80,3 @@ listings <- listings %>%
   ) %>%
   ungroup()
 
-
->>>>>>> 28829d2c7af39da62eff5a2762d15e7c5ab03c6c
