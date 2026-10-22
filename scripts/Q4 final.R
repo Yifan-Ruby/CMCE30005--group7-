@@ -112,3 +112,4 @@ within_15pct <- mean(abs(pred_price - actual_price) / actual_price <= 0.15)
 cat("RMSE: $", round(rmse, 2), "\n")
 cat("MAE: $", round(mae, 2), "\n")
 cat("Within 15%:", round(within_15pct * 100, 1), "%\n")
+
