@@ -11,8 +11,7 @@
 
 ## Business Problem
 
-[Write your one-paragraph problem statement here. Include: who is the stakeholder,
-what question you are answering, why it matters, and what methods you plan to use.]
+This project supports a client intending to list multiple properties on Airbnb in Melbourne by investigating which locations, property characteristics, accommodation segments and pricing positions are associated with stronger estimated booking performance and revenue potential. These decisions matter because entering oversupplied areas, selecting unsuitable property features or setting inappropriate prices could weaken the client’s investment performance. Using the supplied Inside Airbnb snapshot from 16 June 2026, we will clean and analyse listing, calendar and review data in R, apply logistic regression to identify characteristics associated with high estimated occupancy, compare geographic supply and demand through spatial analysis and an Opportunity Index, evaluate accommodation segments using descriptive statistics and non-parametric tests, and develop a multiple linear regression model of log nightly price for initial price benchmarking. The findings will inform the client’s property and market-entry decisions while recognising that occupancy estimates are proxies for booking performance and that observational relationships do not establish causation or guarantee profitability.
 
 ---
 
@@ -38,12 +37,6 @@ what question you are answering, why it matters, and what methods you plan to us
 *Last updated: [Date]*
 
 =======
-Problem statement
-
-Air bnb
-Business Problem 
-
-test-dina lian
 
 # IMPORTING LIBRARIES
 library(tidyverse)
